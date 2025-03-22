@@ -19,35 +19,77 @@ namespace QuanLyGiaoThong1
         public FormPhuongTien()
         {
             InitializeComponent();
+            LoadDataForComboBoxes();
+            LoadDataToGrid(); // Hiển thị dữ liệu trong bảng
         }
 
- 
- 
+        private void LoadDataForComboBoxes()
+        {
+            cboLoaiPT.Items.Clear(); // Xóa dữ liệu cũ
+            cboHangSX.Items.Clear();
 
-            // 🟢 Load dữ liệu phương tiện
-            private void FormPhuongTien_Load(object sender, EventArgs e)
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                LoadData();
-            }
-
-            private void LoadData()
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                try
                 {
-                    string query = "SELECT * FROM PhuongTienGiaoThong";
-                    SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
+                    conn.Open();
+
+                    // Truy vấn Loại Phương Tiện
+                    string queryLoaiPT = "SELECT TenLoaiPhuongTien FROM LoaiPhuongTien";
+                    using (SqlCommand cmdLoaiPT = new SqlCommand(queryLoaiPT, conn))
+                    using (SqlDataReader readerLoaiPT = cmdLoaiPT.ExecuteReader())
+                    {
+                        while (readerLoaiPT.Read())
+                        {
+                            cboLoaiPT.Items.Add(readerLoaiPT["TenLoaiPhuongTien"].ToString());
+                        }
+                    }
+
+                    // Truy vấn Hãng Sản Xuất
+                    string queryHangSX = "SELECT TenHangSX FROM HangSanXuat";
+                    using (SqlCommand cmdHangSX = new SqlCommand(queryHangSX, conn))
+                    using (SqlDataReader readerHangSX = cmdHangSX.ExecuteReader())
+                    {
+                        while (readerHangSX.Read())
+                        {
+                            cboHangSX.Items.Add(readerHangSX["TenHangSX"].ToString());
+                        }
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show($"Lỗi SQL: {ex.Message}", "Thông báo lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi hệ thống: {ex.Message}", "Thông báo lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+            private void LoadDataToGrid()
+            {
+            string query = "SELECT LoaiPhuongTien, HangSanXuat, BienSo, MaChuSoHuu, NamSanXuat, BaoHiem, NgayHetHanBaoHiem FROM PhuongTienGiaoThong";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open(); // 🔴 Đảm bảo mở kết nối trước khi fill dữ liệu
+
+                using (SqlDataAdapter adapter = new SqlDataAdapter(query, conn))
+                {
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
                     dgvPhuongTien.DataSource = dt;
                 }
             }
+        }
+
 
         private void btnThem_Click_1(object sender, EventArgs e)
         {
             try
             {
                 // Kiểm tra đầu vào
-                if (string.IsNullOrWhiteSpace(txtBienSo.Text) || string.IsNullOrWhiteSpace(txtLoaiPT.Text))
+                if (string.IsNullOrWhiteSpace(txtBienSo.Text) || string.IsNullOrWhiteSpace(cboLoaiPT.Text))
                 {
                     MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -61,9 +103,9 @@ namespace QuanLyGiaoThong1
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@BienSo", txtBienSo.Text);
-                        cmd.Parameters.AddWithValue("@LoaiPT", txtLoaiPT.Text);
+                        cmd.Parameters.AddWithValue("@LoaiPT", cboLoaiPT.Text);
                         cmd.Parameters.AddWithValue("@MaChuSoHuu", txtMaChuSoHuu.Text);
-                        cmd.Parameters.AddWithValue("@HangSanXuat", txtHangSX.Text);
+                        cmd.Parameters.AddWithValue("@HangSanXuat", cboHangSX.Text);
                         cmd.Parameters.AddWithValue("@NamSanXuat", int.Parse(txtNamSX.Text)); // Chuyển sang kiểu số
                         cmd.Parameters.AddWithValue("@BaoHiem", txtBaoHiem.Text);
                         cmd.Parameters.AddWithValue("@NgayHetHanBaoHiem", dtpNgayHetHanBaoHiem.Value);
@@ -74,7 +116,7 @@ namespace QuanLyGiaoThong1
                         if (result > 0)
                         {
                             MessageBox.Show("Thêm phương tiện thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            LoadData();
+                            LoadDataForComboBoxes();
                         }
                         else
                         {
@@ -106,9 +148,9 @@ namespace QuanLyGiaoThong1
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@BienSo", txtBienSo.Text);
-                        cmd.Parameters.AddWithValue("@LoaiPT", txtLoaiPT.Text);
+                        cmd.Parameters.AddWithValue("@LoaiPT", cboLoaiPT.Text);
                         cmd.Parameters.AddWithValue("@MaChuSoHuu", txtMaChuSoHuu.Text);
-                        cmd.Parameters.AddWithValue("@HangSanXuat", txtHangSX.Text);
+                        cmd.Parameters.AddWithValue("@HangSanXuat", cboHangSX.Text);
                         cmd.Parameters.AddWithValue("@NamSanXuat", int.Parse(txtNamSX.Text));
                         cmd.Parameters.AddWithValue("@BaoHiem", txtBaoHiem.Text);
                         cmd.Parameters.AddWithValue("@NgayHetHanBaoHiem", dtpNgayHetHanBaoHiem.Value);
@@ -119,7 +161,7 @@ namespace QuanLyGiaoThong1
                         if (result > 0)
                         {
                             MessageBox.Show("Cập nhật phương tiện thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            LoadData();
+                            LoadDataForComboBoxes();
                         }
                         else
                         {
@@ -160,7 +202,7 @@ namespace QuanLyGiaoThong1
                             if (rowsAffected > 0)
                             {
                                 MessageBox.Show("Xóa phương tiện thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                LoadData();
+                                LoadDataForComboBoxes();
                             }
                             else
                             {
@@ -183,7 +225,7 @@ namespace QuanLyGiaoThong1
                 {
                     string query = "SELECT * FROM PhuongTienGiaoThong WHERE LoaiPT LIKE @LoaiPT";
                     SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
-                    adapter.SelectCommand.Parameters.AddWithValue("@LoaiPT", "%" + txtLoaiPT.Text + "%");
+                    adapter.SelectCommand.Parameters.AddWithValue("@LoaiPT", "%" + cboLoaiPT.Text + "%");
 
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
@@ -194,19 +236,62 @@ namespace QuanLyGiaoThong1
         // 🟢 Khi chọn dòng trong DataGridView, hiển thị lên TextBox
         private void dgvPhuongTien_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-                if (e.RowIndex >= 0)
+            if (e.RowIndex >= 0) // Kiểm tra dòng hợp lệ
+            {
+                DataGridViewRow row = dgvPhuongTien.Rows[e.RowIndex];
+
+                // Lấy giá trị từ DataGridView
+                string loaiPT = row.Cells["LoaiPhuongTien"].Value?.ToString();
+                string hangSX = row.Cells["HangSanXuat"].Value?.ToString();
+
+                // Kiểm tra và thêm giá trị vào ComboBox nếu chưa tồn tại
+                if (!string.IsNullOrEmpty(loaiPT) && !cboLoaiPT.Items.Contains(loaiPT))
                 {
-                    txtBienSo.Text = dgvPhuongTien.Rows[e.RowIndex].Cells["BienSo"].Value.ToString();
-                    txtLoaiPT.Text = dgvPhuongTien.Rows[e.RowIndex].Cells["LoaiPT"].Value.ToString();
-                    txtMaChuSoHuu.Text = dgvPhuongTien.Rows[e.RowIndex].Cells["MaChuSoHuu"].Value.ToString();
-                    txtHangSX.Text = dgvPhuongTien.Rows[e.RowIndex].Cells["HangSanXuat"].Value.ToString();
-                    txtNamSX.Text = dgvPhuongTien.Rows[e.RowIndex].Cells["NamSanXuat"].Value.ToString();
-                    txtBaoHiem.Text = dgvPhuongTien.Rows[e.RowIndex].Cells["BaoHiem"].Value.ToString();
-                    dtpNgayHetHanBaoHiem.Value = Convert.ToDateTime(dgvPhuongTien.Rows[e.RowIndex].Cells["NgayHetHanBaoHiem"].Value);
+                    cboLoaiPT.Items.Add(loaiPT);
+                }
+                cboLoaiPT.Text = loaiPT ?? "Không có dữ liệu";
+
+                if (!string.IsNullOrEmpty(hangSX) && !cboHangSX.Items.Contains(hangSX))
+                {
+                    cboHangSX.Items.Add(hangSX);
+                }
+                cboHangSX.Text = hangSX ?? "Không có dữ liệu";
+
+                // Gán các giá trị khác
+                txtBienSo.Text = row.Cells["BienSo"].Value?.ToString();
+                txtMaChuSoHuu.Text = row.Cells["MaChuSoHuu"].Value?.ToString();
+                txtNamSX.Text = row.Cells["NamSanXuat"].Value?.ToString();
+                txtBaoHiem.Text = row.Cells["BaoHiem"].Value?.ToString();
+
+                // Kiểm tra giá trị ngày
+                if (row.Cells["NgayHetHanBaoHiem"].Value != DBNull.Value)
+                {
+                    dtpNgayHetHanBaoHiem.Value = Convert.ToDateTime(row.Cells["NgayHetHanBaoHiem"].Value);
+                }
+                else
+                {
+                    dtpNgayHetHanBaoHiem.Value = DateTime.Now;
                 }
             }
+        }
 
-    
+
+
+
+
+        // 🟢 Load dữ liệu phương tiện
+        private void FormPhuongTien_Load(object sender, EventArgs e)
+        {
+      
+   
+            // Populate Loại PT ComboBox
+            cboLoaiPT.Items.AddRange(new string[] { "Ô tô", "Xe máy", "Xe tải", "Xe đạp" });
+
+            // Populate Hãng SX ComboBox
+            cboHangSX.Items.AddRange(new string[] { "Toyota", "Honda", "Isuzu", "Yamaha" });
+        }
     }
-    }
+
+}
+
 

@@ -28,17 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnSua = new System.Windows.Forms.Button();
             this.btnXoa = new System.Windows.Forms.Button();
             this.btnTimKiem = new System.Windows.Forms.Button();
             this.btnThem = new System.Windows.Forms.Button();
             this.dgvSuCo = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.cboMucDoAnhHuong = new System.Windows.Forms.ComboBox();
+            this.cboLoaiSuCo = new System.Windows.Forms.ComboBox();
             this.txtNguyenNhan = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.dtpThoiGianXayRa = new System.Windows.Forms.DateTimePicker();
-            this.txtMucDoAnhHuong = new System.Windows.Forms.TextBox();
-            this.txtLoaiSuCo = new System.Windows.Forms.TextBox();
             this.txtMaSuCo = new System.Windows.Forms.TextBox();
             this.txtViTri = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -46,6 +47,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dgvSuCo)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -104,14 +106,14 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.panel1.Controls.Add(this.cboMucDoAnhHuong);
+            this.panel1.Controls.Add(this.cboLoaiSuCo);
             this.panel1.Controls.Add(this.txtNguyenNhan);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.btnTimKiem);
             this.panel1.Controls.Add(this.btnXoa);
             this.panel1.Controls.Add(this.btnSua);
             this.panel1.Controls.Add(this.dtpThoiGianXayRa);
-            this.panel1.Controls.Add(this.txtMucDoAnhHuong);
-            this.panel1.Controls.Add(this.txtLoaiSuCo);
             this.panel1.Controls.Add(this.btnThem);
             this.panel1.Controls.Add(this.txtMaSuCo);
             this.panel1.Controls.Add(this.txtViTri);
@@ -124,6 +126,22 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(735, 178);
             this.panel1.TabIndex = 23;
+            // 
+            // cboMucDoAnhHuong
+            // 
+            this.cboMucDoAnhHuong.FormattingEnabled = true;
+            this.cboMucDoAnhHuong.Location = new System.Drawing.Point(411, 68);
+            this.cboMucDoAnhHuong.Name = "cboMucDoAnhHuong";
+            this.cboMucDoAnhHuong.Size = new System.Drawing.Size(121, 24);
+            this.cboMucDoAnhHuong.TabIndex = 36;
+            // 
+            // cboLoaiSuCo
+            // 
+            this.cboLoaiSuCo.FormattingEnabled = true;
+            this.cboLoaiSuCo.Location = new System.Drawing.Point(347, 15);
+            this.cboLoaiSuCo.Name = "cboLoaiSuCo";
+            this.cboLoaiSuCo.Size = new System.Drawing.Size(173, 24);
+            this.cboLoaiSuCo.TabIndex = 35;
             // 
             // txtNguyenNhan
             // 
@@ -148,20 +166,6 @@
             this.dtpThoiGianXayRa.Name = "dtpThoiGianXayRa";
             this.dtpThoiGianXayRa.Size = new System.Drawing.Size(200, 22);
             this.dtpThoiGianXayRa.TabIndex = 32;
-            // 
-            // txtMucDoAnhHuong
-            // 
-            this.txtMucDoAnhHuong.Location = new System.Drawing.Point(358, 68);
-            this.txtMucDoAnhHuong.Name = "txtMucDoAnhHuong";
-            this.txtMucDoAnhHuong.Size = new System.Drawing.Size(149, 22);
-            this.txtMucDoAnhHuong.TabIndex = 31;
-            // 
-            // txtLoaiSuCo
-            // 
-            this.txtLoaiSuCo.Location = new System.Drawing.Point(335, 6);
-            this.txtLoaiSuCo.Name = "txtLoaiSuCo";
-            this.txtLoaiSuCo.Size = new System.Drawing.Size(112, 22);
-            this.txtLoaiSuCo.TabIndex = 30;
             // 
             // txtMaSuCo
             // 
@@ -254,8 +258,6 @@
         private System.Windows.Forms.TextBox txtNguyenNhan;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DateTimePicker dtpThoiGianXayRa;
-        private System.Windows.Forms.TextBox txtMucDoAnhHuong;
-        private System.Windows.Forms.TextBox txtLoaiSuCo;
         private System.Windows.Forms.TextBox txtMaSuCo;
         private System.Windows.Forms.TextBox txtViTri;
         private System.Windows.Forms.Label label5;
@@ -263,5 +265,8 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox cboLoaiSuCo;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.ComboBox cboMucDoAnhHuong;
     }
 }
